@@ -157,6 +157,57 @@ apply_configs() {
     print_success "Custom theme applied"
 }
 
+# Установка Glances для системного мониторинга
+install_glances() {
+    print_step "Installing Glances for system monitoring..."
+    
+    if ! command -v glances &> /dev/null; then
+        print_info "Installing Glances with graphical support..."
+        brew install glances
+        print_success "Glances installed with sparkline graphs support"
+    else
+        print_success "Glances already installed"
+    fi
+}
+
+# Настройка s-mon скрипта
+setup_smon() {
+    print_step "Setting up S-MON system monitor..."
+    
+    # Создание папки для скриптов если её нет
+    if [ ! -d "scripts" ]; then
+        print_error "Scripts directory not found. Make sure you're running from the project root."
+        return 1
+    fi
+    
+    # Проверка существования s-mon скрипта
+    if [ -f "scripts/s-mon" ]; then
+        print_info "Making s-mon executable..."
+        chmod +x "scripts/s-mon"
+        
+        # Создание символической ссылки в /usr/local/bin для глобального доступа
+        if [ ! -L "/usr/local/bin/s-mon" ]; then
+            print_info "Creating global s-mon command..."
+            sudo ln -sf "$(pwd)/scripts/s-mon" "/usr/local/bin/s-mon"
+            print_success "s-mon command available globally"
+        else
+            print_success "s-mon already available globally"
+        fi
+        
+        print_success "S-MON configured successfully"
+        print_info "Available modes:"
+        echo "  • s-mon          - Basic monitoring with graphs"
+        echo "  • s-mon watch    - Real-time monitoring"
+        echo "  • s-mon compact  - Compact mode for corner monitoring"
+        echo "  • s-mon web      - Web interface with interactive graphs"
+        echo "  • s-mon server   - Remote monitoring server"
+        echo "  • s-mon export   - Export graphs to PNG files"
+    else
+        print_error "s-mon script not found in scripts/ directory"
+        return 1
+    fi
+}
+
 # Установка дополнительных инструментов
 install_optional_tools() {
     print_step "Installing optional tools..."
@@ -212,10 +263,16 @@ finalize_installation() {
     echo ""
     echo -e "${CYAN}${FIRE} Features enabled:${NC}"
     echo -e "${WHITE}• 🚀 Custom prompt with emojis${NC}"
-    echo -e "${WHITE}• 📊 Real-time system monitoring${NC}"
+    echo -e "${WHITE}• 📊 Real-time system monitoring with Glances${NC}"
+    echo -e "${WHITE}• 📊 S-MON with sparkline graphs and web interface${NC}"
     echo -e "${WHITE}• 🪟 Terminal multiplexing${NC}"
     echo -e "${WHITE}• 📁 Smart folder icons${NC}"
     echo -e "${WHITE}• 🔧 Useful aliases and shortcuts${NC}"
+    echo ""
+    echo -e "${YELLOW}${STAR} Try these commands:${NC}"
+    echo -e "${WHITE}• s-mon          - System monitoring with graphs${NC}"
+    echo -e "${WHITE}• s-mon web      - Web interface monitoring${NC}"
+    echo -e "${WHITE}• s-mon compact  - Compact corner monitoring${NC}"
     echo ""
     echo -e "${GREEN}${CHECKMARK} Enjoy your new terminal experience!${NC}"
 }
@@ -230,7 +287,9 @@ main() {
     echo "• Oh My Zsh framework"
     echo "• Custom theme with emojis"
     echo "• Useful plugins and aliases"
-    echo "• System monitoring"
+    echo "• Glances for advanced system monitoring"
+    echo "• S-MON - Custom system monitor with graphs"
+    echo "• Global s-mon command for easy access"
     echo ""
     
     read -p "Do you want to continue? (y/N): " -n 1 -r
@@ -248,8 +307,10 @@ main() {
     install_wezterm
     install_ohmyzsh
     install_zsh_plugins
+    install_glances
     create_backups
     apply_configs
+    setup_smon
     install_optional_tools
     setup_git
     finalize_installation
