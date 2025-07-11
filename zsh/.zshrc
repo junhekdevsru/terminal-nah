@@ -168,4 +168,4 @@ alias reload='source ~/.zshrc && echo "🔄 ZSH config reloaded!"'
 # 📊 System info
 alias sysinfo='system_profiler SPSoftwareDataType SPHardwareDataType'
 
-echo "🍎 Welcome to macOS Terminal with style! 🚀"
+echo "🍎 zdarova zaebal 🚀"
