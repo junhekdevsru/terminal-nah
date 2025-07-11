@@ -89,37 +89,29 @@ config.keys = {
 
 -- 📊 Простой мониторинг системы
 wezterm.on('update-right-status', function(window, pane)
-  -- Получаем CPU и RAM одной командой
-  local success, stdout = wezterm.run_child_process({
-    'bash', '-c', 'echo "$(top -l 1 | grep "CPU usage" | awk "{print $3}" | tr -d "%") $(top -l 1 | grep PhysMem | awk "{print $2}" | tr -d "G") $(df -h / | tail -1 | awk "{print $3}" | tr -d "G") $(uptime | awk -F"averages: " "{print $2}" | awk "{print $1}")"'
+  -- Получаем только CPU и RAM
+  local success1, cpu_out = wezterm.run_child_process({
+    'sh', '-c', 'top -l 1 | head -5 | grep "CPU usage" | head -1 | cut -d" " -f3 | tr -d "%"'
   })
   
-  if success then
-    local cpu, ram, disk, load = stdout:match("([%d%.]+) ([%d%.]+) ([%d%.]+) ([%d%.]+)")
-    
-    if cpu and ram and disk and load then
-      window:set_right_status(wezterm.format({
-        { Foreground = { Color = "#50fa7b" } },
-        { Text = "🔥 " .. cpu .. "% " },
-        { Foreground = { Color = "#f8f8f2" } },
-        { Text = "• " },
-        { Foreground = { Color = "#ff79c6" } },
-        { Text = "🧠 " .. ram .. "G " },
-        { Foreground = { Color = "#f8f8f2" } },
-        { Text = "• " },
-        { Foreground = { Color = "#8be9fd" } },
-        { Text = "💾 " .. disk .. "G " },
-        { Foreground = { Color = "#f8f8f2" } },
-        { Text = "• " },
-        { Foreground = { Color = "#bd93f9" } },
-        { Text = "⚖️ " .. load .. " " },
-      }))
-    else
-      window:set_right_status("📊 Loading...")
-    end
-  else
-    window:set_right_status("📊 Error")
-  end
+  local success2, ram_out = wezterm.run_child_process({
+    'sh', '-c', 'top -l 1 | grep PhysMem | awk "{print $2}" | tr -d "G"'
+  })
+  
+  local cpu = success1 and cpu_out:match("%d+%.?%d*") or "--"
+  local ram = success2 and ram_out:match("%d+%.?%d*") or "--"
+  
+  -- Простое отображение
+  window:set_right_status(wezterm.format({
+    { Foreground = { Color = "#50fa7b" } },
+    { Text = "🔥 " .. cpu .. "% " },
+    { Foreground = { Color = "#f8f8f2" } },
+    { Text = "• " },
+    { Foreground = { Color = "#ff79c6" } },
+    { Text = "🧠 " .. ram .. "G " },
+    { Foreground = { Color = "#8be9fd" } },
+    { Text = "🕰️ " .. os.date("%H:%M") .. " " },
+  }))
 end)
 
 -- 🎯 Настройки статусной строки
