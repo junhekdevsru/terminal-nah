@@ -25,19 +25,53 @@
 
 ## 🛠 Установка
 
-### 1. Установка WezTerm
+### 🚀 Автоматическая установка (Рекомендуется)
+
+**Установка одной командой:**
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/junhekdevsru/terminal-nah/main/quick-install.sh)
+```
+
+**Или клонируйте репозиторий и запустите скрипт:**
+
+```bash
+git clone https://github.com/junhekdevsru/terminal-nah.git
+cd terminal-nah
+./install.sh
+```
+
+### 🔧 Что делает скрипт установки:
+
+- ✅ Проверяет совместимость с macOS
+- ✅ Устанавливает Homebrew (если не установлен)
+- ✅ Устанавливает WezTerm
+- ✅ Устанавливает Oh My Zsh
+- ✅ Устанавливает необходимые плагины
+- ✅ Создает резервные копии существующих конфигураций
+- ✅ Применяет новые конфигурации
+- ✅ Устанавливает дополнительные инструменты (Neovim, Git)
+
+---
+
+### 📝 Ручная установка
+
+<details>
+<summary>Нажмите для просмотра инструкций по ручной установке</summary>
+
+#### 1. Установка WezTerm
 
 ```bash
 brew install --cask wezterm
 ```
 
-### 2. Установка Oh My Zsh
+#### 2. Установка Oh My Zsh
 
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 
-### 3. Установка плагинов
+#### 3. Установка плагинов
 
 ```bash
 # Автодополнение
@@ -47,11 +81,11 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/p
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 ```
 
-### 4. Применение конфигурации
+#### 4. Применение конфигурации
 
 ```bash
 # Клонируем репозиторий
-git clone <your-repo-url> ~/terminal-config
+git clone https://github.com/junhekdevsru/terminal-nah.git ~/terminal-config
 
 # Создаем папку для WezTerm
 mkdir -p ~/.config/wezterm
@@ -64,6 +98,8 @@ cp ~/terminal-config/themes/macos-style.zsh-theme ~/.oh-my-zsh/custom/themes/
 # Перезагружаем конфигурацию
 source ~/.zshrc
 ```
+
+</details>
 
 ## 🎮 Горячие клавиши WezTerm
 
