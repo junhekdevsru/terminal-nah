@@ -171,4 +171,3 @@ alias sysinfo='system_profiler SPSoftwareDataType SPHardwareDataType'
 # 🔥 Custom system monitor
 alias s-mon='~/terminal-config/scripts/s-mon'
 
-echo "🍎 zdarova zaebal 🚀"
